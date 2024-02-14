@@ -1,5 +1,6 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { formatTime } from "../../utils/formatTime";
+import { useVideoConext } from "../../contexts/VideoContext";
 
 const VideoPlayer = () => {
   const videoRef = useRef(null);
@@ -7,6 +8,7 @@ const VideoPlayer = () => {
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [isHovering, setIsHovering] = useState(false);
+  const {selectedVideo}=useVideoConext()
 
   const togglePlayPause = () => {
     if (videoRef.current.paused) {
@@ -17,6 +19,10 @@ const VideoPlayer = () => {
       setIsPlaying(false);
     }
   };
+
+  useEffect(()=>{
+    videoRef.current.play();
+  },[selectedVideo])
 
   const handleTimeUpdate = () => {
     console.log(videoRef.current.currentTime);
@@ -57,13 +63,14 @@ const VideoPlayer = () => {
 
   return (
     <div
-      className="rounded-lg relative bg-black py-8"
+      className="rounded-lg relative w-full bg-black py-8"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
       <video
         ref={videoRef}
-        src="https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"
+        src={selectedVideo?.sources}
+        poster={selectedVideo?.thumb}
         className="w-full shadow-lg h-full object-contain"
         onClick={handleVideoClick}
         onTimeUpdate={handleTimeUpdate}

@@ -1,15 +1,20 @@
 import React from 'react';
 import { videos } from '../../data/videos';
+import { useVideoConext } from '../../contexts/VideoContext';
 
 const Playlist = () => {
+  const {setSelectedVideo}=useVideoConext()
+
+ 
   return (
-    <div className="p-4 max-h-[calc(100vh-16px)] overflow-y-auto">
+    <div className="p-4 max-h-[calc(100vh-16px)] min-w-[400px] overflow-y-auto">
       <h2 className="text-lg font-semibold mb-4">Playlist</h2>
       <div className="flex flex-col gap-4">
         {videos.map((video) => (
           <div
             key={video.id}
             className="flex items-start gap-2 cursor-pointer hover:bg-slate-300 max-w-[350px] overflow-hidden"
+            onClick={()=>setSelectedVideo(video)}
           >
             <img
               src={video.thumb}
