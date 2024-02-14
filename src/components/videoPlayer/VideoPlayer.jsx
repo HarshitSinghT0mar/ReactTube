@@ -21,11 +21,11 @@ const VideoPlayer = () => {
   };
 
   useEffect(()=>{
-    videoRef.current.play();
+  togglePlayPause()
   },[selectedVideo])
 
   const handleTimeUpdate = () => {
-    console.log(videoRef.current.currentTime);
+  
     setCurrentTime(videoRef.current.currentTime);
   };
 
