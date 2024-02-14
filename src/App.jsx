@@ -7,7 +7,7 @@ function App() {
 
 
   return (
-    <div className='flex gap-2 p-4'>
+    <div className='flex flex-wrap md:flex-nowrap gap-2 p-4 h-[calc(100vh-16px)] min-w-full'>
     <VideoPlayer />
      <Playlist /> 
     </div>

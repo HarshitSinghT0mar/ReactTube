@@ -3,7 +3,7 @@ import { videos } from '../../data/videos';
 
 const Playlist = () => {
   return (
-    <div className="p-4 max-h-[calc(100vh-20px)] overflow-y-auto">
+    <div className="p-4 max-h-[calc(100vh-16px)] overflow-y-auto">
       <h2 className="text-lg font-semibold mb-4">Playlist</h2>
       <div className="flex flex-col gap-4">
         {videos.map((video) => (
