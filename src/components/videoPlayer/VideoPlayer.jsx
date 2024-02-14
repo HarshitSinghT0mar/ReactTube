@@ -49,6 +49,12 @@ const VideoPlayer = () => {
     setIsHovering(false);
   };
 
+  const handleVideoEnd = () => {
+
+    setIsPlaying(false); 
+   
+  };
+
   return (
     <div
       className="rounded-lg relative bg-black py-8"
@@ -58,10 +64,11 @@ const VideoPlayer = () => {
       <video
         ref={videoRef}
         src="https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"
-        className="w-full rounded-lg shadow-lg h-full object-contain"
+        className="w-full shadow-lg h-full object-contain"
         onClick={handleVideoClick}
         onTimeUpdate={handleTimeUpdate}
         onLoadedMetadata={handleLoadedMetadata}
+        onEnded={handleVideoEnd} 
         controls={false}
       >
         <source
@@ -77,7 +84,7 @@ const VideoPlayer = () => {
         onClick={handleProgressBarClick}
       >
         <div
-          className="bg-red-500 h-full"
+          className="bg-[#4F2485] h-full"
           style={{ width: `${(currentTime / duration) * 100}%` }}
         ></div>
       </div>
