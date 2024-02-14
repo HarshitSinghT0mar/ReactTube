@@ -1,20 +1,36 @@
-import React from 'react';
-import { videos } from '../../data/videos';
-import { useVideoConext } from '../../contexts/VideoContext';
+import React, { useState } from "react";
+import { videos } from "../../data/videos";
+import { useVideoConext } from "../../contexts/VideoContext";
 
 const Playlist = () => {
-  const {setSelectedVideo}=useVideoConext()
+  const { selectedVideo,setSelectedVideo } = useVideoConext();
+  const [autoplay, setAutoplay] = useState(false);
 
- 
+  const handleAutoplayToggle = () => {
+    setAutoplay(!autoplay);
+  };
+
   return (
     <div className="p-4 max-h-[calc(100vh-16px)] min-w-[400px] overflow-y-auto">
-      <h2 className="text-lg font-semibold mb-4">Playlist</h2>
-      <div className="flex flex-col gap-4">
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-lg font-semibold">Playlist</h2>
+        <label htmlFor="autoplay" className="flex items-center cursor-pointer">
+          Autoplay
+          <input
+            type="checkbox"
+            id="autoplay"
+            checked={autoplay}
+            onChange={handleAutoplayToggle}
+            className="ml-2 h-4 w-4"
+          />
+        </label>
+      </div>
+      <div className="flex flex-col gap-1">
         {videos.map((video) => (
           <div
             key={video.id}
-            className="flex items-start gap-2 cursor-pointer hover:bg-slate-300 max-w-[350px] overflow-hidden"
-            onClick={()=>setSelectedVideo(video)}
+            className={`flex items-start gap-2 p-2 cursor-pointer hover:bg-gray-300 max-w-[350px] overflow-hidden ${selectedVideo?.id===video?.id && 'bg-gray-300' }`}
+            onClick={() => setSelectedVideo(video)}
           >
             <img
               src={video.thumb}
