@@ -1,10 +1,13 @@
-import React, { useState, useRef } from 'react';
+import React, { useRef, useState } from "react";
 
 const VideoPlayer = () => {
-  const [isPlaying, setIsPlaying] = useState(false);
   const videoRef = useRef(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [isHovering, setIsHovering] = useState(false);
 
-  const togglePlay = () => {
+  const togglePlayPause = () => {
     if (videoRef.current.paused) {
       videoRef.current.play();
       setIsPlaying(true);
@@ -14,48 +17,98 @@ const VideoPlayer = () => {
     }
   };
 
+  const handleTimeUpdate = () => {
+    setCurrentTime(videoRef.current.currentTime);
+  };
+
+  const handleProgressBarClick = (event) => {
+    event.stopPropagation();
+    const rect = event.target.getBoundingClientRect();
+    const offsetX = event.clientX - rect.left;
+    const width = rect.width;
+    const seekTime = (offsetX / width) * duration;
+    videoRef.current.currentTime = seekTime;
+    setCurrentTime(seekTime);
+  };
+
+  const handleLoadedMetadata = () => {
+    setDuration(videoRef.current.duration);
+  };
+
+  const handleVideoClick = () => {
+    togglePlayPause();
+  };
+
+  const handleMouseEnter = () => {
+    setIsHovering(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovering(false);
+  };
+
   return (
-    <div className="p-4 rounded-lg">
-      <div className="relative">
-        <video
-          ref={videoRef}
-          className="w-full rounded-lg shadow-lg"
-          controls
+    <div
+      className=" rounded-lg relative"
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
+      <video
+        ref={videoRef}
+        src="https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"
+        className="w-full rounded-lg shadow-lg h-full object-cover"
+        onClick={handleVideoClick}
+        onTimeUpdate={handleTimeUpdate}
+        onLoadedMetadata={handleLoadedMetadata}
+        controls={false}
+      >
+        <source
           src="https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"
-        ></video>
-        {/* Video Controls */}
+          type="video/mp4"
+        />
+        Your browser does not support the video tag.
+      </video>
+      <div
+        className={`absolute left-0 right-0 bottom-6 bg-gray-800 h-2 cursor-pointer ${
+          isHovering ? "opacity-100" : "opacity-0"
+        }`}
+        onClick={handleProgressBarClick}
+      >
         <div
-          className="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-300 hover:opacity-100"
-          onClick={togglePlay}
-        >
-          {/* Play/Pause Button */}
-          <button className="bg-gray-300 bg-opacity-50 p-2 rounded-full shadow-lg focus:outline-none">
-            <svg
-              className="w-6 h-6 text-gray-800"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              {isPlaying ? (
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M6 4h4v12H6V4zm8 0h4v12h-4V4z"
-                ></path>
-              ) : (
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M5 3l14 9-14 9V3z"
-                ></path>
-              )}
-            </svg>
-          </button>
-        </div>
+          className="bg-red-500 h-full"
+          style={{ width: `${(currentTime / duration) * 100}%` }}
+        ></div>
       </div>
+
+      {isPlaying ? (
+        <button
+          className="absolute inset-0 w-full h-full flex items-center justify-center"
+          onClick={togglePlayPause}
+        >
+          <svg
+            className="w-16 h-16 text-white"
+            fill="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path d="M6 6h4v12H6zm8 0h4v12h-4z" />
+          </svg>
+        </button>
+      ) : (
+        <button
+          className={`absolute inset-0 w-full h-full flex items-center justify-center `}
+          onClick={togglePlayPause}
+        >
+          <svg
+            className="w-16 h-16 text-white"
+            fill="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path d="M8 5v14l11-7z" />
+          </svg>
+        </button>
+      )}
     </div>
   );
 };
