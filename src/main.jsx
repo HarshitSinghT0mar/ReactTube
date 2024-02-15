@@ -9,5 +9,5 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     <VideoProvider>
       <App />
     </VideoProvider>
-  </React.StrictMode>
+   </React.StrictMode>
 );

@@ -8,7 +8,7 @@ const VideoPlayer = () => {
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [isHovering, setIsHovering] = useState(false);
-  const {selectedVideo}=useVideoConext()
+  const {selectedVideo,setSelectedVideo}=useVideoConext()
 
   const togglePlayPause = () => {
     if (videoRef.current.paused) {
@@ -85,7 +85,7 @@ const VideoPlayer = () => {
         Your browser does not support the video tag.
       </video>
       <div
-        className={`absolute left-0 right-0 bottom-8 z-10 bg-gray-800 h-2 cursor-pointer ${
+        className={`absolute left-0 right-0 bottom-8 z-10 bg-gray-200 h-2 cursor-pointer ${
           isHovering ? "opacity-100" : "opacity-0"
         }`}
         onClick={handleProgressBarClick}
