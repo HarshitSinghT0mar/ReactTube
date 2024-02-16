@@ -5,9 +5,9 @@ import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
 
 
 const Playlist = () => {
-  const { selectedVideo, setSelectedVideo } = useVideoConext();
+  const { selectedVideo, setSelectedVideo,playlist, setPlaylist } = useVideoConext();
   const [autoplay, setAutoplay] = useState(false);
-  const [playlist, setPlaylist] = useState(videos);
+  // const [playlist, setPlaylist] = useState(videos);
 
   const handleAutoplayToggle = () => {
     setAutoplay(!autoplay);
@@ -15,6 +15,7 @@ const Playlist = () => {
 
   const handleDragEnd = (result) => {
     if (!result.destination) return; 
+    console.log({result});
     const items = Array.from(playlist);
     const [reorderedItem] = items.splice(result.source.index, 1);
     items.splice(result.destination.index, 0, reorderedItem);

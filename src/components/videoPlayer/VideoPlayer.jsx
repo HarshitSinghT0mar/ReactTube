@@ -8,11 +8,13 @@ const VideoPlayer = () => {
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [isHovering, setIsHovering] = useState(false);
-  const {selectedVideo,setSelectedVideo}=useVideoConext()
+  const { selectedVideo, setSelectedVideo, playlist } = useVideoConext();
+  const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
 
   const togglePlayPause = () => {
     if (videoRef.current.paused) {
       videoRef.current.play();
+
       setIsPlaying(true);
     } else {
       videoRef.current.pause();
@@ -20,12 +22,11 @@ const VideoPlayer = () => {
     }
   };
 
-  useEffect(()=>{
-  togglePlayPause()
-  },[selectedVideo])
+  useEffect(() => {
+    togglePlayPause();
+  }, [selectedVideo]);
 
   const handleTimeUpdate = () => {
-  
     setCurrentTime(videoRef.current.currentTime);
   };
 
@@ -56,9 +57,16 @@ const VideoPlayer = () => {
   };
 
   const handleVideoEnd = () => {
+    setIsPlaying(false);
+    playNextVideo();
+  };
 
-    setIsPlaying(false); 
-   
+  const playNextVideo = () => {
+    const nextIndex = currentVideoIndex + 1;
+    if (nextIndex < playlist.length) {
+      setCurrentVideoIndex(nextIndex);
+      setSelectedVideo(playlist[nextIndex]);
+    }
   };
 
   return (
@@ -75,13 +83,10 @@ const VideoPlayer = () => {
         onClick={handleVideoClick}
         onTimeUpdate={handleTimeUpdate}
         onLoadedMetadata={handleLoadedMetadata}
-        onEnded={handleVideoEnd} 
+        onEnded={handleVideoEnd}
         controls={false}
+        muted={!isPlaying}
       >
-        <source
-          src="https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"
-          type="video/mp4"
-        />
         Your browser does not support the video tag.
       </video>
       <div
@@ -101,7 +106,7 @@ const VideoPlayer = () => {
           className="absolute inset-0 w-full h-full flex items-center justify-center"
           onClick={togglePlayPause}
         >
-          {isPlaying ? (
+          {!videoRef.current.paused || isPlaying ? (
             <svg
               className="w-16 h-16 text-white"
               fill="currentColor"
@@ -123,9 +128,9 @@ const VideoPlayer = () => {
         </button>
       )}
       <div className="flex justify-between items-center px-4 absolute bottom-1">
-        {/* <span className="text-white">{formatTime(currentTime)}</span>
-        <span className="text-white">{formatTime(duration)}</span> */}
-        <span className="text-white">{`${formatTime(currentTime)} / ${formatTime(duration)}`}</span>
+        <span className="text-white">{`${formatTime(
+          currentTime
+        )} / ${formatTime(duration)}`}</span>
       </div>
     </div>
   );
