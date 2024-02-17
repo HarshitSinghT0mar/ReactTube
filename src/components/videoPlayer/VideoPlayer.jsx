@@ -9,6 +9,7 @@ const VideoPlayer = () => {
   const [duration, setDuration] = useState(0);
   const [isHovering, setIsHovering] = useState(false);
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
+  const [playbackSpeed, setPlaybackspeed] = useState(1);
   const { selectedVideo, setSelectedVideo, playlist, autoplay } =
     useVideoConext();
 
@@ -26,6 +27,10 @@ const VideoPlayer = () => {
   useEffect(() => {
     togglePlayPause();
   }, [selectedVideo]);
+
+  // useEffect(() => {
+  //   setPlaybackspeed(playbackSpeed);
+  // }, [playbackSpeed]);
 
   const handleTimeUpdate = () => {
     setCurrentTime(videoRef.current.currentTime);
@@ -51,7 +56,6 @@ const VideoPlayer = () => {
       autoplay && playNextVideo();
     }
   };
-
   const playNextVideo = () => {
     const nextIndex = currentVideoIndex + 1;
     if (nextIndex < playlist.length) {
@@ -118,10 +122,25 @@ const VideoPlayer = () => {
           )}
         </button>
       )}
-      <div className="flex justify-between items-center px-4 absolute bottom-1">
-        <span className="text-white">{`${formatTime(
-          currentTime
-        )} / ${formatTime(duration)}`}</span>
+      <div className="flex justify-between items-center px-4 absolute bottom-1 w-full">
+        <div className="flex justify-between w-full">
+          <span className="text-white text-sm">{`${formatTime(
+            currentTime
+          )} / ${formatTime(duration)}`}</span>
+        </div>
+        <select
+          className=" bg-gray-800 border text-sm border-gray-700 text-white rounded-sm focus:outline-none"
+          value={playbackSpeed}
+          onChange={(e) => {
+     setPlaybackspeed(parseFloat(e.target.value))
+            videoRef.current.playbackRate = parseFloat(e.target.value);
+          }}
+        >
+       { [0.5, 1, 1.5, 2, 2.5, 3].map((speed)=>{
+        return   <option value={speed}>{speed}x</option>
+       })}
+         
+        </select>
       </div>
     </div>
   );
