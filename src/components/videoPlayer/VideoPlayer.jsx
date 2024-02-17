@@ -18,14 +18,22 @@ const VideoPlayer = () => {
       videoRef.current.play();
 
       setIsPlaying(true);
+      videoRef.current.playbackRate = playbackSpeed;
     } else {
       videoRef.current.pause();
       setIsPlaying(false);
     }
   };
+  useEffect(() => {
+    if (selectedVideo) {
+      videoRef.current.playbackRate = playbackSpeed;
+      setIsPlaying(true); 
+    }
+  }, [selectedVideo, playbackSpeed]);
 
   useEffect(() => {
     togglePlayPause();
+    videoRef.current.playbackRate = playbackSpeed;
   }, [selectedVideo]);
 
   // useEffect(() => {
@@ -132,12 +140,12 @@ const VideoPlayer = () => {
           className=" bg-gray-800 border text-sm border-gray-700 text-white rounded-sm focus:outline-none"
           value={playbackSpeed}
           onChange={(e) => {
-     setPlaybackspeed(parseFloat(e.target.value))
-            videoRef.current.playbackRate = parseFloat(e.target.value);
+            setPlaybackspeed(parseFloat(e.target.value))
+           
           }}
         >
        { [0.5, 1, 1.5, 2, 2.5, 3].map((speed)=>{
-        return   <option value={speed}>{speed}x</option>
+        return   <option key={speed} value={speed}>{speed}x</option>
        })}
          
         </select>
