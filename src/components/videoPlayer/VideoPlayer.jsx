@@ -8,8 +8,9 @@ const VideoPlayer = () => {
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [isHovering, setIsHovering] = useState(false);
-  const { selectedVideo, setSelectedVideo, playlist } = useVideoConext();
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
+  const { selectedVideo, setSelectedVideo, playlist, autoplay } =
+    useVideoConext();
 
   const togglePlayPause = () => {
     if (videoRef.current.paused) {
@@ -44,21 +45,11 @@ const VideoPlayer = () => {
     setDuration(videoRef.current.duration);
   };
 
-  const handleVideoClick = () => {
-    togglePlayPause();
-  };
-
-  const handleMouseEnter = () => {
-    setIsHovering(true);
-  };
-
-  const handleMouseLeave = () => {
-    setIsHovering(false);
-  };
-
   const handleVideoEnd = () => {
     setIsPlaying(false);
-    playNextVideo();
+    {
+      autoplay && playNextVideo();
+    }
   };
 
   const playNextVideo = () => {
@@ -72,15 +63,15 @@ const VideoPlayer = () => {
   return (
     <div
       className="rounded-lg relative w-full bg-black py-8"
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
+      onMouseEnter={() => setIsHovering(true)}
+      onMouseLeave={() => setIsHovering(false)}
     >
       <video
         ref={videoRef}
         src={selectedVideo?.sources}
         poster={selectedVideo?.thumb}
         className="w-full shadow-lg h-full object-contain"
-        onClick={handleVideoClick}
+        onClick={() => togglePlayPause()}
         onTimeUpdate={handleTimeUpdate}
         onLoadedMetadata={handleLoadedMetadata}
         onEnded={handleVideoEnd}

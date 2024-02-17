@@ -3,19 +3,20 @@ import { videos } from "../../data/videos";
 import { useVideoConext } from "../../contexts/VideoContext";
 import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
 
-
 const Playlist = () => {
-  const { selectedVideo, setSelectedVideo,playlist, setPlaylist } = useVideoConext();
-  const [autoplay, setAutoplay] = useState(false);
-  // const [playlist, setPlaylist] = useState(videos);
+  const { selectedVideo, setSelectedVideo, playlist, setPlaylist, autoplay,setAutoplay } =
+    useVideoConext();
+
+
 
   const handleAutoplayToggle = () => {
+    console.log(autoplay);
     setAutoplay(!autoplay);
   };
 
   const handleDragEnd = (result) => {
-    if (!result.destination) return; 
-    console.log({result});
+    if (!result.destination) return;
+ 
     const items = Array.from(playlist);
     const [reorderedItem] = items.splice(result.source.index, 1);
     items.splice(result.destination.index, 0, reorderedItem);
@@ -37,7 +38,7 @@ const Playlist = () => {
           />
         </label>
       </div>
-      <DragDropContext  onDragEnd={handleDragEnd}>
+      <DragDropContext onDragEnd={handleDragEnd}>
         <Droppable droppableId="playlist">
           {(provided) => (
             <div
