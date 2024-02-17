@@ -36,9 +36,7 @@ const VideoPlayer = () => {
     videoRef.current.playbackRate = playbackSpeed;
   }, [selectedVideo]);
 
-  // useEffect(() => {
-  //   setPlaybackspeed(playbackSpeed);
-  // }, [playbackSpeed]);
+  
 
   const handleTimeUpdate = () => {
     setCurrentTime(videoRef.current.currentTime);
@@ -88,7 +86,7 @@ const VideoPlayer = () => {
         onLoadedMetadata={handleLoadedMetadata}
         onEnded={handleVideoEnd}
         controls={false}
-        muted={!isPlaying}
+      muted={!isPlaying}
       >
         Your browser does not support the video tag.
       </video>
@@ -99,7 +97,7 @@ const VideoPlayer = () => {
         onClick={handleProgressBarClick}
       >
         <div
-          className="bg-[#4F2485] h-full"
+          className="bg-rigiTheme h-full"
           style={{ width: `${(currentTime / duration) * 100}%` }}
         ></div>
       </div>
