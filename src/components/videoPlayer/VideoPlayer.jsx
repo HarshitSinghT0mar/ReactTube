@@ -10,6 +10,7 @@ const VideoPlayer = () => {
   const [isHovering, setIsHovering] = useState(false);
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
   const [playbackSpeed, setPlaybackspeed] = useState(1);
+  const [volume, setVolume] = useState(1);
   const { selectedVideo, setSelectedVideo, playlist, autoplay } =
     useVideoConext();
 
@@ -40,7 +41,7 @@ const VideoPlayer = () => {
 
   useEffect(() => {
     togglePlayPause();
-  
+
     videoRef.current.playbackRate = playbackSpeed;
   }, [selectedVideo]);
 
@@ -57,7 +58,6 @@ const VideoPlayer = () => {
     videoRef.current.currentTime = seekTime;
     setCurrentTime(seekTime);
   };
-
 
   const playNextVideo = () => {
     const nextIndex = currentVideoIndex + 1;
@@ -133,27 +133,49 @@ const VideoPlayer = () => {
           )}
         </button>
       )}
-      <div className="flex justify-between items-center px-4 absolute bottom-1 w-full">
+      <div className="flex justify-between items-center my-1 px-4 absolute bottom-1 w-full">
         <div className="flex justify-between w-full">
           <span className="text-white text-sm">{`${formatTime(
             currentTime
           )} / ${formatTime(duration)}`}</span>
         </div>
-        <select
-          className=" bg-gray-800 border text-sm border-gray-700 text-white rounded-sm focus:outline-none"
-          value={playbackSpeed}
-          onChange={(e) => {
-            setPlaybackspeed(parseFloat(e.target.value));
-          }}
-        >
-          {[0.5, 1, 1.5, 2, 2.5, 3].map((speed) => {
-            return (
-              <option key={speed} value={speed}>
-                {speed}x
-              </option>
-            );
-          })}
-        </select>
+        <div className="flex gap-4 items-center text-white text-xs">
+          <label className="text-white ">Volume</label>
+          <input
+            type="range"
+            min="0"
+            max="1"
+            step="0.1"
+            value={volume}
+            onChange={(e) => {
+              const newVolume = parseFloat(e.target.value);
+              setVolume(newVolume);
+              videoRef.current.volume = newVolume;
+            }}
+            className="w-24 h-4 bg-gray-800 rounded-full overflow-hidden appearance-none slider"
+            style={{
+              background: `linear-gradient(to right, #4F2485 ${
+                volume * 100
+              }%, #ccc ${volume * 100}%)`,
+            }}
+          />
+          <label className="text-white whitespace-nowrap" >Playback Speed:</label>
+          <select
+            className=" bg-gray-800 border text-xs border-gray-700 text-white rounded-sm focus:outline-none"
+            value={playbackSpeed}
+            onChange={(e) => {
+              setPlaybackspeed(parseFloat(e.target.value));
+            }}
+          >
+            {[0.5, 1, 1.5, 2, 2.5, 3].map((speed) => {
+              return (
+                <option key={speed} value={speed}>
+                  {speed}x
+                </option>
+              );
+            })}
+          </select>
+        </div>
       </div>
     </div>
   );
