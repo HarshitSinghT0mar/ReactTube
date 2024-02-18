@@ -40,6 +40,7 @@ const VideoPlayer = () => {
 
   useEffect(() => {
     togglePlayPause();
+  
     videoRef.current.playbackRate = playbackSpeed;
   }, [selectedVideo]);
 
