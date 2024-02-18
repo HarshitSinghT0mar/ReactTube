@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { videos } from "../../data/videos";
 import { useVideoConext } from "../../contexts/VideoContext";
 import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
 
@@ -10,7 +9,7 @@ const Playlist = () => {
 
 
   const handleAutoplayToggle = () => {
-    console.log(autoplay);
+
     setAutoplay(!autoplay);
   };
 

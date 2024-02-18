@@ -5,7 +5,7 @@ const VideoContext = createContext();
 
 export const VideoProvider = ({ children }) => {
   const [playlist, setPlaylist] = useState(videos);
-  const [selectedVideo, setSelectedVideo] = useState(videos[0]);
+  const [selectedVideo, setSelectedVideo] = useState(playlist[0]);
   const [autoplay, setAutoplay] = useState(false);
 
 

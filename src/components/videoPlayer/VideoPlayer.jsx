@@ -27,16 +27,21 @@ const VideoPlayer = () => {
   useEffect(() => {
     if (selectedVideo) {
       videoRef.current.playbackRate = playbackSpeed;
-      setIsPlaying(true); 
+      setIsPlaying(true);
     }
   }, [selectedVideo, playbackSpeed]);
+
+  useEffect(() => {
+    const newIndex = playlist.findIndex(
+      (video) => video.id === selectedVideo.id
+    );
+    setCurrentVideoIndex(newIndex);
+  }, [selectedVideo, playlist]);
 
   useEffect(() => {
     togglePlayPause();
     videoRef.current.playbackRate = playbackSpeed;
   }, [selectedVideo]);
-
-  
 
   const handleTimeUpdate = () => {
     setCurrentTime(videoRef.current.currentTime);
@@ -52,21 +57,20 @@ const VideoPlayer = () => {
     setCurrentTime(seekTime);
   };
 
-  const handleLoadedMetadata = () => {
-    setDuration(videoRef.current.duration);
-  };
 
-  const handleVideoEnd = () => {
-    setIsPlaying(false);
-    {
-      autoplay && playNextVideo();
-    }
-  };
   const playNextVideo = () => {
     const nextIndex = currentVideoIndex + 1;
     if (nextIndex < playlist.length) {
       setCurrentVideoIndex(nextIndex);
       setSelectedVideo(playlist[nextIndex]);
+    }
+  };
+
+  const handleVideoEnd = () => {
+    if (autoplay) {
+      playNextVideo();
+    } else {
+      setIsPlaying(false);
     }
   };
 
@@ -81,12 +85,12 @@ const VideoPlayer = () => {
         src={selectedVideo?.sources}
         poster={selectedVideo?.thumb}
         className="w-full shadow-lg h-full object-contain"
-        onClick={() => togglePlayPause()}
+        onClick={togglePlayPause}
         onTimeUpdate={handleTimeUpdate}
-        onLoadedMetadata={handleLoadedMetadata}
+        onLoadedMetadata={() => setDuration(videoRef.current.duration)}
         onEnded={handleVideoEnd}
         controls={false}
-      muted={!isPlaying}
+        muted={!isPlaying}
       >
         Your browser does not support the video tag.
       </video>
@@ -138,14 +142,16 @@ const VideoPlayer = () => {
           className=" bg-gray-800 border text-sm border-gray-700 text-white rounded-sm focus:outline-none"
           value={playbackSpeed}
           onChange={(e) => {
-            setPlaybackspeed(parseFloat(e.target.value))
-           
+            setPlaybackspeed(parseFloat(e.target.value));
           }}
         >
-       { [0.5, 1, 1.5, 2, 2.5, 3].map((speed)=>{
-        return   <option key={speed} value={speed}>{speed}x</option>
-       })}
-         
+          {[0.5, 1, 1.5, 2, 2.5, 3].map((speed) => {
+            return (
+              <option key={speed} value={speed}>
+                {speed}x
+              </option>
+            );
+          })}
         </select>
       </div>
     </div>
